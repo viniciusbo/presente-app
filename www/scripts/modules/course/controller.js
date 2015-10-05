@@ -82,7 +82,7 @@ function CoursesMainCtrl($scope, $state, $ionicSideMenuDelegate, courseService) 
   }
 }
 
-function CoursesNewCtrl($scope, $state, courseService) {
+function CoursesNewCtrl($scope, $state, $ionicScrollDelegate, courseService) {
   $scope.course = {};
   $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
 
@@ -111,6 +111,10 @@ function CoursesNewCtrl($scope, $state, courseService) {
       }, function(err) {
         console.error(err);
       });
+  };
+
+  $scope.resizeScroll = function() {
+    $ionicScrollDelegate.resize();
   };
 }
 
