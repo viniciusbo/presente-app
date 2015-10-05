@@ -1,0 +1,16 @@
+.item-error {
+  border-top: none;
+  padding-top: 0;
+  font-size: 14px;
+  color: #ce4844;
+}
+
+.list-icon-right .icon {
+  float: right;
+  font-size: 20px;
+}
+
+.button .icon-beer {
+  vertical-align: middle;
+  margin-top: -3px;
+}
