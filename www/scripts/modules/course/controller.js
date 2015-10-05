@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('PresenteApp.Course.controller', ['PresenteApp.Course.service'])
+angular.module('PresenteApp.Course.controller', ['ngAnimate', 'PresenteApp.Course.service'])
   .controller('CoursesMainCtrl', CoursesMainCtrl)
   .controller('CoursesNewCtrl', CoursesNewCtrl)
   .controller('CoursesShowCtrl', CoursesShowCtrl);
@@ -10,6 +10,7 @@ function CoursesMainCtrl($scope, $state, $ionicSideMenuDelegate, courseService) 
     courseService
       .getAll()
       .then(function(courses) {
+        console.log(courses);
         $scope.courses = courses;
       }, function(err) {
         console.error(err);
@@ -48,7 +49,7 @@ function CoursesMainCtrl($scope, $state, $ionicSideMenuDelegate, courseService) 
     courseService
       .didAttend(courseId, date)
       .then(function(result) {
-         $ionicSideMenuDelegate.toggleRight();
+         // $ionicSideMenuDelegate.toggleRight();
          displayCourses();
          displayAttendanceList();
       }, function(err) {
@@ -60,17 +61,30 @@ function CoursesMainCtrl($scope, $state, $ionicSideMenuDelegate, courseService) 
     courseService
       .didNotAttend(courseId, date)
       .then(function(result) {
-        $ionicSideMenuDelegate.toggleRight();
+        // $ionicSideMenuDelegate.toggleRight();
         displayCourses();
         displayAttendanceList();
       }, function(err) {
         console.error(err);
       });
   };
+
+  $scope.didNotHaveClass = function(courseId, date) {
+    courseService
+      .didNotHaveClass(courseId, date)
+      .then(function(result) {
+        // $ionicSideMenuDelegate.toggleRight();
+        displayCourses();
+        displayAttendanceList();
+      }, function(err) {
+        console.error(err);
+      });
+  }
 }
 
 function CoursesNewCtrl($scope, $state, courseService) {
   $scope.course = {};
+  $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
 
   $scope.hasAtLeastOneClass = function(weekdays, courseClasses) {
     var classes = courseClasses || {};
@@ -89,9 +103,9 @@ function CoursesNewCtrl($scope, $state, courseService) {
     return isValid;
   };
 
-  $scope.save = function(course) {
+  $scope.save = function(course, weekdays) {
     courseService
-      .insert(course)
+      .insert(course, weekdays)
       .then(function(result) {
         $state.go('main');
       }, function(err) {

@@ -7,14 +7,23 @@
           <button class="button" menu-toggle="right"><i class="icon ion-ios7-bell"></i></button>
         </ion-header-bar>
         <ion-content class="has-header">
+          <div
+            class="padding list-courses-empty"
+            ng-if="courses.length == 0">
+            <p><i class="icon ion-university dark"></i></p>
+            <p>Cadastre sua primeira matéria e não perca controle de suas faltas.</p>
+
+            <button class="button button-block button-positive" ui-sref="courses_new">Nova matéria</button>
+          </div>
+
           <ion-list>
             <ion-item class="item-icon-left" ui-sref="courses_show({courseId: course.id})" ng-repeat="course in courses track by course.id">
               <i
                 class="icon ion-university positive"
                 ng-class="{
-                  balanced: course.doc.attendance.count / course.doc.attendance.total >= 0.9,
-                  energized: course.doc.attendance.count / course.doc.attendance.total < 0.9 && course.doc.attendance.count / course.doc.attendance.total >= 0.4,
-                  assertive: course.doc.attendance.count / course.doc.attendance.total < 0.4
+                  balanced: course.doc.attendance.count / getCourseClassesCountUntilNow(course.doc) > 0.60,
+                  energized: course.doc.attendance.count / getCourseClassesCountUntilNow(course.doc) <= 0.60 && course.doc.attendance.count / getCourseClassesCountUntilNow(course.doc) >= 0.25,
+                  assertive: course.doc.attendance.count / getCourseClassesCountUntilNow(course.doc) < 0.25
                 }"></i> {{course.doc.name}}
               <p>{{course.doc.attendance.count}} presenças em {{getCourseClassesCountUntilNow(course.doc)}} aulas</p>
 
@@ -22,63 +31,6 @@
                 <i class="icon ion-trash-a"></i>
               </ion-option-button>
             </ion-item>
-
-            <!-- <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university energized"></i> PAA
-              <p>10 faltas em 30 aulas</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-
-            <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university balanced"></i> Segurança Computacional
-              <p>2 faltas em 30 aulas</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-
-            <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university energized"></i> Segurança e Auditoria de SI
-              <p>15 faltas em 30 aulas</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-
-            <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university assertive"></i> IHM
-              <p>20 faltas em 30 aulas</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-
-            <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university dark"></i> Inteligência Artificial
-              <p>Ainda não começou</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-
-            <ion-item class="item-icon-left" ui-sref="courses_show({courseId: 1})">
-              <i class="icon ion-university dark"></i> AED 3
-              <p>Terminou</p>
-
-              <ion-option-button class="button-assertive">
-                <i class="icon ion-trash-a"></i>
-              </ion-option-button>
-            </ion-item>
-          </ion-list> -->
-
-          <!-- <button class="button button-block button-full button-positive button-outline" ui-sref="courses_new">Nova matéria</button> -->
         </ion-content>
     </ion-side-menu-content>
 
@@ -88,32 +40,44 @@
       </ion-header-bar>
 
       <ion-content>
-        <div class="padding">Caso não houver aula use o botão <i class="icon ion-beer energized"></i></div>
-        <ion-list>
-          <div ng-repeat="(date, attendanceList) in attendanceListByDate">
-            <ion-item class="item-divider">
-              {{date | date : 'dd/MM/yyyy'}}
-            </ion-item>
+        <div
+          class="padding list-attendance-empty"
+          ng-if="!attendanceListByDate">
+          <p><i class="icon ion-beer energized"></i></p>
+          <p>Nenhuma aula até agora.</p>
+        </div>
 
-            <ion-item class="item-button-right" ng-repeat="attendance in attendanceList">
-              <h2>{{attendance.courseName}}</h2>
+        <div ng-if="attendanceListByDate">
+          <!-- <div class="padding dark">Caso não houver aula use o botão <i class="icon ion-beer energized"></i></div> -->
 
-              <div class="buttons">
-                <a class="button button-clear button-balanced" ng-click="didAttend(attendance.courseId, date)">
-                  <i class="icon ion-checkmark"></i>
-                </a>
+          <ion-list>
+            <div ng-repeat="(date, attendanceList) in attendanceListByDate">
+              <ion-item class="item-divider">
+                {{date | date : 'dd/MM/yyyy'}}
+              </ion-item>
 
-                <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance.courseId, date)">
-                  <i class="icon ion-close"></i>
-                </a>
+              <ion-item
+                class="item-button-right item-attendance"
+                ng-repeat="attendance in attendanceList">
+                <h2>{{attendance.courseName}}</h2>
 
-                <a class="button button-clear button-energized" ng-click="didNotAttend(attendance.courseId, date)">
-                  <i class="icon ion-beer"></i>
-                </a>
-              </div>
-            </ion-item>
-          </div>
-        </ion-list>
+                <div class="buttons">
+                  <a class="button button-clear button-balanced" ng-click="didAttend(attendance.courseId, date)">
+                    <i class="icon ion-checkmark"></i>
+                  </a>
+
+                  <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance.courseId, date)">
+                    <i class="icon ion-close"></i>
+                  </a>
+
+                  <!-- <a class="button button-clear button-energized" ng-click="didNotHaveClass(attendance.courseId, date)">
+                    <i class="icon ion-beer"></i>
+                  </a> -->
+                </div>
+              </ion-item>
+            </div>
+          </ion-list>
+        </div>
       </ion-content>
     </ion-side-menu>
   </ion-side-menus>

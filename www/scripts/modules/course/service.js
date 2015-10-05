@@ -43,14 +43,22 @@ function courseService($q, CourseModel) {
   };
 
   this.getCourseClassesCountUntilNow = function(course) {
-    return course.attendance.classes
+    var classCount = course.attendance.classes
       .filter(function(attendance) {
         var isPast = moment().diff(moment(attendance.date)) >= 0;
         if (isPast)
           return true;
 
         return false;
-      }).length;
+      })
+      .map(function(attendance) {
+        return course.classes[moment(attendance.date).day()];
+      })
+      .reduce(function(prevCount, nextCount) {
+        return prevCount + nextCount
+      });
+
+    return classCount;
   };
 
   this.getAttendanceListByDate = function() {
@@ -62,7 +70,7 @@ function courseService($q, CourseModel) {
         return;
       }
 
-      var attendanceListByDate = {};
+      var attendanceListByDate = null;
       result.rows.forEach(function(course) {
         return course.doc.attendance.classes
           .filter(function(attendance) {
@@ -76,7 +84,7 @@ function courseService($q, CourseModel) {
             return true;
           })
           .forEach(function(attendance) {
-
+            attendanceListByDate = attendanceListByDate || {};
             attendanceListByDate[attendance.date] = attendanceListByDate[attendance.date] || [];
 
             attendanceListByDate[attendance.date].push({
@@ -92,7 +100,7 @@ function courseService($q, CourseModel) {
     return deferred.promise;
   };
 
-  this.insert = function(course) {
+  this.insert = function(course, weekdays) {
     var deferred = $q.defer();
 
     var startDate = moment(course.start);
@@ -106,16 +114,17 @@ function courseService($q, CourseModel) {
     };
 
     for (var currentDate = moment(course.start); currentDate.isBefore(endDate); currentDate.add(1, 'days')) {
+      var hasClass = weekdays[currentDate.day()] == 1 ? true : false;
       var classCount = course.classes[currentDate.day()] || 0;
 
-      if (classCount > 0) {
+      if (hasClass && classCount > 0) {
         var attendance = {
           date: currentDate.clone(),
           didAttend: null
         }
 
         course.attendance.classes.push(attendance);
-        course.attendance.total++;
+        course.attendance.total += classCount;
       }
     }
 
@@ -156,10 +165,10 @@ function courseService($q, CourseModel) {
       }
 
       var attendanceIndex;
-      course.attendance.classes.every(function(attendance) {
+      course.attendance.classes.every(function(attendance, index) {
         if (attendance.date == date) {
           attendance.didAttend = true;
-          course.attendance.count++;
+          course.attendance.count += course.classes[moment(attendance.date).day()];
           return false;
         }
 
@@ -180,6 +189,38 @@ function courseService($q, CourseModel) {
   };
 
   this.didNotAttend = function(courseId, date) {
+    var deferred = $q.defer();
+
+    db.get(courseId, function(err, course) {
+      if (err) {
+        deferred.reject(err);
+        return;
+      }
+
+      var attendanceIndex;
+      course.attendance.classes.every(function(attendance) {
+        if (attendance.date == date) {
+          attendance.didAttend = false;
+          return false;
+        }
+
+        return true;
+      });
+
+      db.put(course, courseId, function(err, updatedCourse) {
+        if (err) {
+          deferred.reject(err);
+          return;
+        }
+
+        return deferred.resolve(updatedCourse);
+      })
+    });
+
+    return deferred.promise;
+  };
+
+  this.didNotHaveClass = function(courseId, date) {
     var deferred = $q.defer();
 
     db.get(courseId, function(err, course) {
