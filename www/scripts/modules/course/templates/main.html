@@ -87,7 +87,8 @@
         <h1 class="title">Você estava presente?</h1>
       </ion-header-bar>
 
-      <ion-content title="Você estava presente?">
+      <ion-content>
+        <div class="padding">Caso não houver aula use o botão <i class="icon ion-beer energized"></i></div>
         <ion-list>
           <div ng-repeat="(date, attendanceList) in attendanceListByDate">
             <ion-item class="item-divider">
@@ -106,8 +107,8 @@
                   <i class="icon ion-close"></i>
                 </a>
 
-                <a class="button button-clear" ng-click="didNotAttend(attendance.courseId, date)">
-                  <img class="icon icon-beer" src="images/beer.svg" height="20" />
+                <a class="button button-clear button-energized" ng-click="didNotAttend(attendance.courseId, date)">
+                  <i class="icon ion-beer"></i>
                 </a>
               </div>
             </ion-item>
