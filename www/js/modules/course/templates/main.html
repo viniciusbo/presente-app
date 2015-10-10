@@ -1,0 +1,35 @@
+<ion-view view-title="Minhas matérias">
+  <ion-nav-buttons side="primary">
+    <button class="button" ui-sref="app.courses_new">
+      <i class="ion-plus"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div
+      class="padding list-courses-empty"
+      ng-if="courses.length == 0">
+      <p><i class="icon ion-university dark"></i></p>
+      <p>Cadastre sua primeira matéria e não perca controle de suas faltas.</p>
+
+      <button class="button button-block button-positive" ui-sref="app.courses_new">Nova matéria</button>
+    </div>
+
+    <ion-list>
+      <ion-item class="item-icon-left" ui-sref="app.courses_show({courseId: course.id})" ng-repeat="course in courses track by course.id">
+        <i
+          class="icon ion-university positive"
+          ng-class="{
+            balanced: course.doc.attendance.count / course.doc.attendance.skipCount > 0.60,
+            energized: course.doc.attendance.count / course.doc.attendance.skipCount <= 0.60 && course.doc.attendance.count / course.doc.attendance.skipCount >= 0.25,
+            assertive: course.doc.attendance.count / course.doc.attendance.skipCount < 0.25
+          }"></i> {{course.doc.name}}
+        <p>{{course.doc.attendance.count}} presenças em {{course.doc.attendance.count + course.doc.attendance.skipCount}} aulas</p>
+
+        <ion-option-button class="button-assertive" ng-click="remove(course.doc)">
+          <i class="icon ion-trash-a"></i>
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

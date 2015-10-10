@@ -27,8 +27,14 @@ function Sync(src, target, opts, callback) {
   var self = this;
   this.canceled = false;
 
-  this.push = replicate(src, target, opts);
-  this.pull = replicate(target, src, opts);
+  var optsPush = opts.push ? utils.extend({}, opts, opts.push) : opts;
+  var optsPull = opts.pull ? utils.extend({}, opts, opts.pull) : opts;
+
+  this.push = replicate(src, target, optsPush);
+  this.pull = replicate(target, src, optsPull);
+
+  this.pushPaused = true;
+  this.pullPaused = true;
 
   function pullChange(change) {
     self.emit('change', {
@@ -54,17 +60,49 @@ function Sync(src, target, opts, callback) {
       doc: doc
     });
   }
+  function pushPaused() {
+    self.pushPaused = true;
+    if (self.pullPaused) {
+      self.emit('paused');
+    }
+  }
+  function pullPaused() {
+    self.pullPaused = true;
+    if (self.pushPaused) {
+      self.emit('paused');
+    }
+  }
+  function pushActive() {
+    self.pushPaused = false;
+    if (self.pullPaused) {
+      self.emit('active', {
+        direction: 'push'
+      });
+    }
+  }
+  function pullActive() {
+    self.pullPaused = false;
+    if (self.pushPaused) {
+      self.emit('active', {
+        direction: 'pull'
+      });
+    }
+  }
 
-  var listeners = {};
   var removed = {};
 
   function removeAll(type) { // type is 'push' or 'pull'
     return function (event, func) {
       var isChange = event === 'change' &&
         (func === pullChange || func === pushChange);
-      var isOtherEvent = event in listeners;
+      var isDenied = event === 'denied' &&
+        (func === pullDenied || func === pushDenied);
+      var isPaused = event === 'paused' &&
+        (func === pullPaused || func === pushPaused);
+      var isActive = event === 'active' &&
+        (func === pullActive || func === pushActive);
 
-      if (isChange || isOtherEvent) {
+      if (isChange || isDenied || isPaused || isActive) {
         if (!(event in removed)) {
           removed[event] = {};
         }
@@ -89,6 +127,12 @@ function Sync(src, target, opts, callback) {
     } else if (event === 'denied') {
       self.pull.on('denied', pullDenied);
       self.push.on('denied', pushDenied);
+    } else if (event === 'active') {
+      self.pull.on('active', pullActive);
+      self.push.on('active', pushActive);
+    } else if (event === 'paused') {
+      self.pull.on('paused', pullPaused);
+      self.push.on('paused', pushPaused);
     }
   });
 
@@ -96,6 +140,15 @@ function Sync(src, target, opts, callback) {
     if (event === 'change') {
       self.pull.removeListener('change', pullChange);
       self.push.removeListener('change', pushChange);
+    } else if (event === 'denied') {
+      self.pull.removeListener('denied', pullDenied);
+      self.push.removeListener('denied', pushDenied);
+    } else if (event === 'active') {
+      self.pull.removeListener('active', pullActive);
+      self.push.removeListener('active', pushActive);
+    } else if (event === 'paused') {
+      self.pull.removeListener('paused', pullPaused);
+      self.push.removeListener('paused', pushPaused);
     }
   });
 

@@ -23,9 +23,6 @@ function replicate(src, target, opts, returnValue, result) {
   var batches_limit = opts.batches_limit || 10;
   var changesPending = false;     // true while src.changes is running
   var doc_ids = opts.doc_ids;
-  var state = {
-    cancelled: false
-  };
   var repId;
   var checkpointer;
   var allErrors = [];
@@ -51,7 +48,7 @@ function replicate(src, target, opts, returnValue, result) {
     }
     return generateReplicationId(src, target, opts).then(function (res) {
       repId = res;
-      checkpointer = new Checkpointer(src, target, repId, state);
+      checkpointer = new Checkpointer(src, target, repId, returnValue);
     });
   }
 
@@ -61,7 +58,7 @@ function replicate(src, target, opts, returnValue, result) {
     }
     var docs = currentBatch.docs;
     return target.bulkDocs({docs: docs, new_edits: false}).then(function (res) {
-      if (state.cancelled) {
+      if (returnValue.cancelled) {
         completeReplication();
         throw new Error('cancelled');
       }
@@ -103,18 +100,20 @@ function replicate(src, target, opts, returnValue, result) {
   }
 
   function finishBatch() {
+    result.last_seq = last_seq = currentBatch.seq;
+    var outResult = utils.clone(result);
+    if (changedDocs.length) {
+      outResult.docs = changedDocs;
+      returnValue.emit('change', outResult);
+    }
     writingCheckpoint = true;
     return checkpointer.writeCheckpoint(currentBatch.seq,
         session).then(function () {
       writingCheckpoint = false;
-      if (state.cancelled) {
+      if (returnValue.cancelled) {
         completeReplication();
         throw new Error('cancelled');
       }
-      result.last_seq = last_seq = currentBatch.seq;
-      var outResult = utils.clone(result);
-      outResult.docs = changedDocs;
-      returnValue.emit('change', outResult);
       currentBatch = undefined;
       getChanges();
     }).catch(function (err) {
@@ -136,7 +135,7 @@ function replicate(src, target, opts, returnValue, result) {
       });
     });
     return target.revsDiff(diff).then(function (diffs) {
-      if (state.cancelled) {
+      if (returnValue.cancelled) {
         completeReplication();
         throw new Error('cancelled');
       }
@@ -146,7 +145,7 @@ function replicate(src, target, opts, returnValue, result) {
   }
 
   function getBatchDocs() {
-    return getDocs(src, currentBatch.diffs, state).then(function (docs) {
+    return getDocs(src, currentBatch.diffs, returnValue).then(function (docs) {
       docs.forEach(function (doc) {
         delete currentBatch.diffs[doc._id];
         result.docs_read++;
@@ -156,7 +155,7 @@ function replicate(src, target, opts, returnValue, result) {
   }
 
   function startNextBatch() {
-    if (state.cancelled || currentBatch) {
+    if (returnValue.cancelled || currentBatch) {
       return;
     }
     if (batches.length === 0) {
@@ -233,7 +232,7 @@ function replicate(src, target, opts, returnValue, result) {
     if (replicationCompleted) {
       return;
     }
-    if (state.cancelled) {
+    if (returnValue.cancelled) {
       result.status = 'cancelled';
       if (writingCheckpoint) {
         return;
@@ -242,7 +241,7 @@ function replicate(src, target, opts, returnValue, result) {
     result.status = result.status || 'complete';
     result.end_time = new Date();
     result.last_seq = last_seq;
-    replicationCompleted = state.cancelled = true;
+    replicationCompleted = true;
     var non403s = allErrors.filter(function (error) {
       return error.name !== 'unauthorized' && error.name !== 'forbidden';
     });
@@ -264,7 +263,7 @@ function replicate(src, target, opts, returnValue, result) {
 
 
   function onChange(change) {
-    if (state.cancelled) {
+    if (returnValue.cancelled) {
       return completeReplication();
     }
     var filter = utils.filterChange(opts)(change);
@@ -279,7 +278,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function onChangesComplete(changes) {
     changesPending = false;
-    if (state.cancelled) {
+    if (returnValue.cancelled) {
       return completeReplication();
     }
 
@@ -302,7 +301,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function onChangesError(err) {
     changesPending = false;
-    if (state.cancelled) {
+    if (returnValue.cancelled) {
       return completeReplication();
     }
     abortReplication('changes rejected', err);
@@ -347,7 +346,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function startChanges() {
     initCheckpointer().then(function () {
-      if (state.cancelled) {
+      if (returnValue.cancelled) {
         completeReplication();
         return;
       }
@@ -368,6 +367,9 @@ function replicate(src, target, opts, returnValue, result) {
           } else { // ddoc filter
             changesOpts.filter = opts.filter;
           }
+        }
+        if (opts.heartbeat) {
+          changesOpts.heartbeat = opts.heartbeat;
         }
         if (opts.query_params) {
           changesOpts.query_params = opts.query_params;
@@ -407,7 +409,7 @@ function replicate(src, target, opts, returnValue, result) {
       return checkpointer.writeCheckpoint(opts.since, session);
     }).then(function () {
       writingCheckpoint = false;
-      if (state.cancelled) {
+      if (returnValue.cancelled) {
         completeReplication();
         return;
       }

@@ -539,7 +539,7 @@ function init(api, opts, callback) {
         return opts.complete(txnResult.error);
       }
       txn = txnResult.txn;
-      txn.onerror = idbError(opts.complete);
+      txn.onabort = idbError(opts.complete);
       txn.oncomplete = onTxnComplete;
 
       bySeqStore = txn.objectStore(BY_SEQ_STORE);
@@ -641,7 +641,7 @@ function init(api, opts, callback) {
       txn.objectStore(DOC_STORE).put(
         encodeMetadata(metadata, winningRev, deleted));
     };
-    txn.onerror = idbError(callback);
+    txn.onabort = idbError(callback);
     txn.oncomplete = function () {
       callback();
     };
@@ -806,7 +806,15 @@ function init(api, opts, callback) {
     return;
   }
 
-  var req = indexedDB.open(dbName, ADAPTER_VERSION);
+  var req;
+  if (opts.storage) {
+    req = indexedDB.open(dbName, {
+      version: ADAPTER_VERSION,
+      storage: opts.storage
+    });
+  } else {
+    req = indexedDB.open(dbName, ADAPTER_VERSION);
+  }
 
   if (!('openReqList' in IdbPouch)) {
     IdbPouch.openReqList = {};
@@ -859,16 +867,18 @@ function init(api, opts, callback) {
       idb.close();
       delete cachedDBs[dbName];
     };
-    idb.onabort = function () {
+
+    idb.onabort = function (e) {
+      console.error('Database has a global failure', e.target.error);
       idb.close();
       delete cachedDBs[dbName];
     };
 
     var txn = idb.transaction([
-        META_STORE,
-        DETECT_BLOB_SUPPORT_STORE,
-        DOC_STORE
-      ], 'readwrite');
+      META_STORE,
+      DETECT_BLOB_SUPPORT_STORE,
+      DOC_STORE
+    ], 'readwrite');
 
     var req = txn.objectStore(META_STORE).get(META_STORE);
 
@@ -946,7 +956,6 @@ function init(api, opts, callback) {
     console.error(msg);
     callback(errors.error(errors.IDB_ERROR, msg));
   };
-
 }
 
 IdbPouch.valid = function () {

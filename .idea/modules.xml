@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/CordovaLib/CordovaLib.iml" filepath="$PROJECT_DIR$/platforms/android/CordovaLib/CordovaLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/android.iml" filepath="$PROJECT_DIR$/platforms/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/CordovaLib/build/generated/source/buildConfig/buildConfig.iml" filepath="$PROJECT_DIR$/platforms/android/CordovaLib/build/generated/source/buildConfig/buildConfig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/build/generated/source/buildConfig/buildConfig1.iml" filepath="$PROJECT_DIR$/platforms/android/build/generated/source/buildConfig/buildConfig1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/ionic-plugin-keyboard/src/ionic-plugin-keyboard.iml" filepath="$PROJECT_DIR$/plugins/ionic-plugin-keyboard/src/ionic-plugin-keyboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/org.apache.cordova.statusbar/src/org.apache.cordova.statusbar.iml" filepath="$PROJECT_DIR$/plugins/org.apache.cordova.statusbar/src/org.apache.cordova.statusbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/node_modules/cordova/node_modules/cordova-lib/node_modules/properties-parser/properties-parser.iml" filepath="$PROJECT_DIR$/node_modules/cordova/node_modules/cordova-lib/node_modules/properties-parser/properties-parser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/node_modules/ionic/node_modules/ionic-app-lib/node_modules/ionic-cordova-lib/node_modules/properties-parser/properties-parser1.iml" filepath="$PROJECT_DIR$/node_modules/ionic/node_modules/ionic-app-lib/node_modules/ionic-cordova-lib/node_modules/properties-parser/properties-parser1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/build/generated/source/r/r.iml" filepath="$PROJECT_DIR$/platforms/android/build/generated/source/r/r.iml" />
+    </modules>
+  </component>
+</project>

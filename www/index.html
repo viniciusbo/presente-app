@@ -3,50 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>Presente! &#x2022; Nunca perca controle de suas faltas. De novo.</title>
+    <title></title>
 
-    <!-- build:css styles/vendor.css -->
-    <!-- <link rel="stylesheet" href="vendor/some.contrib.css"> -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="lib/ionic/release/css/ionic.css">
-    <!-- endbower -->
-    <!-- endbuild -->
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
-    <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  
-</head>
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
 
-  <body ng-app="PresenteApp">
-    <ion-nav-bar class="nav-title-slide-ios7 bar-light">
-      <ion-nav-back-button class="button-icon ion-ios7-arrow-back">
-      </ion-nav-back-button>
-    </ion-nav-bar>
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
 
-    <ion-nav-view></ion-nav-view>
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
 
-    <!-- build:js scripts/vendor.js -->
-    <!-- <script src="vendor/someContribJs.js"></script> -->
-    <!-- bower:js -->
-    <script src="lib/ionic/release/js/ionic.bundle.min.js"></script>
+    <!-- your app's js -->
     <script src="lib/pouchdb/dist/pouchdb.js"></script>
     <script src="lib/pouchdb/dist/pouchdb.localstorage.js"></script>
     <script src="lib/moment/moment.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+    <script src="js/modules/app/app.js"></script>
+    <script src="js/modules/app/controllers.js"></script>
+    <script src="js/modules/course/controllers.js"></script>
+    <script src="js/modules/course/service.js"></script>
+  </head>
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
-<!-- <script src="cordova.js"></script> -->
-
-
-    <!-- build:js scripts/scripts.js -->
-    <script src="scripts/config.js"></script>
-    <script src="scripts/app.js"></script>
-    <script src="scripts/modules/intro/controller.js"></script>
-    <script src="scripts/modules/course/controller.js"></script>
-    <script src="scripts/modules/course/service.js"></script>
-    <!-- endbuild -->
-</body>
+  <body ng-app="app">
+    <ion-nav-view></ion-nav-view>
+  </body>
 </html>
