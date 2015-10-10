@@ -20,6 +20,8 @@ angular.module('app', ['ionic', 'app.controllers', 'course.controllers'])
       StatusBar.styleDefault();
     }
 
+    $ionicConfigProvider.views.swipeBackEnabled(false);
+
     moment.locale('pt-br');
   });
 })
