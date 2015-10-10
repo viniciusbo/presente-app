@@ -1,0 +1,26 @@
+<ion-view title="{{course.name}}">
+  <ion-content class="has-header">
+    <ion-list class="list list-icon-right">
+      <ion-item class="item-divider">
+        Presença nas aulas
+      </ion-item>
+
+      <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index">
+        {{attendance.date | date : 'dd/MM/yyyy - EEE'}}
+
+        <i
+          class="icon ion-close assertive"
+          ng-show="attendance.didAttend == false"
+          ></i>
+        <i
+          class="icon ion-checkmark balanced"
+          ng-show="attendance.didAttend == true"
+          ></i>
+        <i
+          class="icon ion-help"
+          ng-show="attendance.didAttend == null"
+          ></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="archive3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/node_modules/ionic/node_modules/unzip/testData/uncompressed/archive.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -5,6 +5,7 @@ var errors = require('./deps/errors');
 var EventEmitter = require('events').EventEmitter;
 var upsert = require('./deps/upsert');
 var Changes = require('./changes');
+var bulkGetShim = require('./deps/bulkGetShim');
 var Promise = utils.Promise;
 var isDeleted = require('./deps/docs/isDeleted');
 var isLocalId = require('./deps/docs/isLocalId');
@@ -192,7 +193,6 @@ AbstractPouchDB.prototype.put =
     callback = args.pop();
     return callback(errors.error(errors.NOT_AN_OBJECT));
   }
-  doc = utils.clone(doc);
   while (true) {
     temp = args.shift();
     temptype = typeof temp;
@@ -314,7 +314,7 @@ AbstractPouchDB.prototype.remove =
       opts = optsOrRev;
     }
   }
-  opts = utils.clone(opts || {});
+  opts = opts || {};
   opts.was_delete = true;
   var newDoc = {_id: doc._id, _rev: (doc._rev || opts.rev)};
   newDoc._deleted = true;
@@ -330,7 +330,6 @@ AbstractPouchDB.prototype.revsDiff =
     callback = opts;
     opts = {};
   }
-  opts = utils.clone(opts);
   var ids = Object.keys(req);
 
   if (!ids.length) {
@@ -393,6 +392,18 @@ AbstractPouchDB.prototype.revsDiff =
   }, this);
 });
 
+// _bulk_get API for faster replication, as described in
+// https://github.com/apache/couchdb-chttpd/pull/33
+// At the "abstract" level, it will just run multiple get()s in
+// parallel, because this isn't much of a performance cost
+// for local databases (except the cost of multiple transactions, which is
+// small). The http adapter overrides this in order
+// to do a more efficient single HTTP request.
+AbstractPouchDB.prototype.bulkGet =
+  utils.adapterFun('bulkGet', function (opts, callback) {
+  bulkGetShim(this, opts, callback);
+});
+
 // compact one document and fire callback
 // by compacting we mean removing all revisions which
 // are further from the leaf in revision tree than max_height
@@ -430,9 +441,9 @@ AbstractPouchDB.prototype.compact =
     callback = opts;
     opts = {};
   }
-  var self = this;
 
-  opts = utils.clone(opts || {});
+  var self = this;
+  opts = opts || {};
 
   self._compactionQueue = self._compactionQueue || [];
   self._compactionQueue.push({opts: opts, callback: callback});
@@ -543,7 +554,6 @@ AbstractPouchDB.prototype.get =
   }
 
   return this._get(id, opts, function (err, result) {
-    opts = utils.clone(opts);
     if (err) {
       return callback(err);
     }
@@ -638,7 +648,6 @@ AbstractPouchDB.prototype.getAttachment =
     callback = opts;
     opts = {};
   }
-  opts = utils.clone(opts);
   this._get(docId, opts, function (err, res) {
     if (err) {
       return callback(err);
@@ -659,7 +668,6 @@ AbstractPouchDB.prototype.allDocs =
     callback = opts;
     opts = {};
   }
-  opts = utils.clone(opts);
   opts.skip = typeof opts.skip !== 'undefined' ? opts.skip : 0;
   if (opts.start_key) {
     opts.startkey = opts.start_key;
@@ -733,7 +741,7 @@ AbstractPouchDB.prototype.bulkDocs =
     opts = {};
   }
 
-  opts = utils.clone(opts || {});
+  opts = opts || {};
 
   if (Array.isArray(req)) {
     req = {
@@ -764,7 +772,6 @@ AbstractPouchDB.prototype.bulkDocs =
     return callback(errors.error(errors.BAD_REQUEST, attachmentError));
   }
 
-  req = utils.clone(req);
   if (!('new_edits' in opts)) {
     if ('new_edits' in req) {
       opts.new_edits = req.new_edits;

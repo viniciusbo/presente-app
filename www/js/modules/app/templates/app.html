@@ -1,0 +1,55 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+        Voltar
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="right">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="right">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Você estava presente?</h1>
+    </ion-header-bar>
+    <ion-content>
+      <div
+          class="padding list-attendance-empty"
+          ng-if="!attendanceListByDate">
+          <p><i class="icon ion-beer energized"></i></p>
+          <p>Nenhuma aula até agora.</p>
+        </div>
+
+        <div ng-if="attendanceListByDate">
+          <ion-list>
+            <div ng-repeat="(date, attendanceList) in attendanceListByDate">
+              <ion-item class="item-divider">
+                {{date | date : 'dd/MM/yyyy'}}
+              </ion-item>
+
+              <ion-item
+                class="item-button-right item-attendance"
+                ng-repeat="attendance in attendanceList">
+                <h2>{{attendance.courseName}}</h2>
+
+                <div class="buttons">
+                  <a class="button button-clear button-balanced" ng-click="didAttend(attendance.courseId, date)">
+                    <i class="icon ion-checkmark"></i>
+                  </a>
+
+                  <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance.courseId, date)">
+                    <i class="icon ion-close"></i>
+                  </a>
+                </div>
+              </ion-item>
+            </div>
+          </ion-list>
+        </div>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
