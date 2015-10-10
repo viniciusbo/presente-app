@@ -19,6 +19,8 @@ angular.module('app', ['ionic', 'app.controllers', 'course.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    moment.locale('pt-br');
   });
 })
 
