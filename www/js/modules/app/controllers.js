@@ -7,24 +7,28 @@ function AppCtrl($rootScope, $scope, $state, $ionicModal, $q, courseService) {
       .getAttendanceListByDate()
       .then(function(attendanceListByDate) {
         $scope.attendanceListByDate = attendanceListByDate;
-
-        var pendingAttendanceCount = 0;
-
-        for(var date in attendanceListByDate) {
-          attendanceListByDate[date].forEach(function(attendance) {
-            console.log(attendance);
-          });
-        };
       }, function(err) {
         console.error(err);
       });
   };
 
-  $scope.pendingAttendanceCount = 0;
+  var displayPendingAttendanceCount = function() {
+    courseService
+      .getPendingAttendanceCount()
+      .then(function(count) {
+        $scope.pendingAttendanceCount = count;
+      }, function(err) {
+        console.error(err);
+      });
+  };
 
   displayAttendanceList();
+  displayPendingAttendanceCount();
+
+  $scope.pendingAttendanceCount = 0;
 
   $scope.$on('courses:updated', function() {
+    displayPendingAttendanceCount();
     displayAttendanceList();
   });
 
@@ -65,6 +69,7 @@ function AppCtrl($rootScope, $scope, $state, $ionicModal, $q, courseService) {
       .then(function(result) {
         displayAttendanceList();
           displayAttendanceList();
+          displayPendingAttendanceCount();
           $rootScope.$broadcast('attendance:updated');
           $state.go('app.courses_main');
       }, function(err) {
@@ -77,6 +82,7 @@ function AppCtrl($rootScope, $scope, $state, $ionicModal, $q, courseService) {
       .didNotAttend(courseId, date)
       .then(function(result) {
         displayAttendanceList();
+        displayPendingAttendanceCount();
         $rootScope.$broadcast('attendance:updated');
         $state.go('app.courses_main');
       }, function(err) {

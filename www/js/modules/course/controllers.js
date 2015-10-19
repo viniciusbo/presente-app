@@ -52,16 +52,11 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
 }
 
 function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, courseService) {
-  function setDefaultState() {
-    $scope.course = {
-      classes: []
-    };
-    $scope.weekdays = [];
-    $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
-    // $scope.courseForm.$setUntouched();
-  }
-
-  setDefaultState();
+  $scope.course = {
+    classes: []
+  };
+  $scope.weekdays = [];
+  $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
 
   $scope.hasAtLeastOneClass = function(weekdays, courseClasses) {
     var classes = courseClasses || {};

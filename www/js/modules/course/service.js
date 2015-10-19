@@ -80,6 +80,36 @@ function courseService($q, CourseModel) {
     return deferred.promise;
   };
 
+  this.getPendingAttendanceCount = function() {
+    var deferred = $q.defer();
+    var pendingAttendanceCount = 0;
+
+    db.allDocs({ include_docs: true }, function(err, result) {
+      if (err) {
+        deferred.reject(err);
+        return;
+      }
+
+      result.rows.forEach(function(course) {
+        pendingAttendanceCount += course.doc.attendance.classes
+          .filter(function(attendance) {
+            if (attendance.didAttend != null)
+              return false;
+            var isFuture = moment().diff(moment(attendance.date)) <= 0;
+            if (isFuture)
+              return false;
+
+            return true;
+          })
+          .length;
+      });
+
+      deferred.resolve(pendingAttendanceCount);
+    });
+
+    return deferred.promise;
+  };
+
   this.insert = function(course, weekdays) {
     var deferred = $q.defer();
 
