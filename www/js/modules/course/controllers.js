@@ -22,6 +22,10 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
     displayCourses();
   });
 
+  $scope.$on('courses:updated', function() {
+    displayCourses();
+  });
+
   $scope.getCourseClassesCountUntilNow = function(course) {
     return courseService.getCourseClassesCountUntilNow(course);
   };
@@ -48,11 +52,16 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
 }
 
 function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, courseService) {
-  $scope.course = {
-    classes: []
-  };
-  $scope.weekdays = [];
-  $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
+  function setDefaultState() {
+    $scope.course = {
+      classes: []
+    };
+    $scope.weekdays = [];
+    $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
+    // $scope.courseForm.$setUntouched();
+  }
+
+  setDefaultState();
 
   $scope.hasAtLeastOneClass = function(weekdays, courseClasses) {
     var classes = courseClasses || {};
@@ -74,8 +83,8 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, course
     courseService
       .insert(course, weekdays)
       .then(function(result) {
-        $rootScope.$broadcast('courses:updated');
-        $state.go('app.courses_main');
+        $rootScope.$broadcast('courses:updated')
+        $scope.closeNewClassModal();
       }, function(err) {
         console.error(err);
       });

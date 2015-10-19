@@ -2,6 +2,11 @@
   float: right;
 }
 
+.button-icon .badge {
+  float: right;
+  margin-top: 6px;
+}
+
 .item + .range {
   border-top: none;
 }
