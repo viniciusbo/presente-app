@@ -20,13 +20,13 @@ angular.module('app', ['ionic', 'app.controllers', 'course.controllers'])
       StatusBar.styleDefault();
     }
 
-    $ionicConfigProvider.views.swipeBackEnabled(false);
-
     moment.locale('pt-br');
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.views.swipeBackEnabled(false);
+
   $stateProvider
 
     .state('app', {
@@ -48,15 +48,15 @@ angular.module('app', ['ionic', 'app.controllers', 'course.controllers'])
       }
     })
 
-    .state('app.courses_new', {
-      url: '/courses/new',
-      views: {
-        'menuContent': {
-          templateUrl: 'js/modules/course/templates/new.html',
-          controller: 'CoursesNewCtrl'
-        }
-      }
-    })
+    // .state('app.courses_new', {
+    //   url: '/courses/new',
+    //   views: {
+    //     'menuContent': {
+    //       templateUrl: 'js/modules/course/templates/new.html',
+    //       controller: 'CoursesNewCtrl'
+    //     }
+    //   }
+    // })
 
     .state('app.courses_show', {
       url: '/courses/{courseId}',

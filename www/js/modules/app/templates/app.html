@@ -7,6 +7,11 @@
 
       <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="right">
+          <span
+            ng-if="pendingAttendanceCount > 0"
+            class="badge badge-assertive">
+            {{pendingAttendanceCount}}
+          </span>
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -22,7 +27,7 @@
           class="padding list-attendance-empty"
           ng-if="!attendanceListByDate">
           <p><i class="icon ion-beer energized"></i></p>
-          <p>Nenhuma aula até agora.</p>
+          <p>Nenhuma aula nova até agora.</p>
         </div>
 
         <div ng-if="attendanceListByDate">

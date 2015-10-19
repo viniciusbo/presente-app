@@ -22,6 +22,10 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
     displayCourses();
   });
 
+  $scope.$on('courses:updated', function() {
+    displayCourses();
+  });
+
   $scope.getCourseClassesCountUntilNow = function(course) {
     return courseService.getCourseClassesCountUntilNow(course);
   };
@@ -74,8 +78,8 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, course
     courseService
       .insert(course, weekdays)
       .then(function(result) {
-        $rootScope.$broadcast('courses:updated');
-        $state.go('app.courses_main');
+        $rootScope.$broadcast('courses:updated')
+        $scope.closeNewClassModal();
       }, function(err) {
         console.error(err);
       });
