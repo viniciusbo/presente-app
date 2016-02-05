@@ -51,12 +51,16 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
   };
 }
 
-function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, courseService) {
+function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordovaLocalNotification, $cordovaKeyboard, courseService) {
   $scope.course = {
     classes: []
   };
   $scope.weekdays = [];
   $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
+
+  $scope.hideKeyboard = function() {
+    $cordovaKeyboard.close();
+  };
 
   $scope.hasAtLeastOneClass = function(weekdays, courseClasses) {
     var classes = courseClasses || {};
@@ -75,14 +79,25 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, course
   };
 
   $scope.save = function(course, weekdays) {
-    courseService
-      .insert(course, weekdays)
-      .then(function(result) {
-        $rootScope.$broadcast('courses:updated')
-        $scope.closeNewClassModal();
-      }, function(err) {
-        console.error(err);
-      });
+    window.plugin.notification.local.hasPermission(function(granted) {
+      if (granted == false)
+        window.plugin.notification.local.registerPermission(function(granted) {
+          insertCourse();
+        });
+      else
+        insertCourse();
+    });
+
+    function insertCourse() {
+      courseService
+        .insert(course, weekdays)
+        .then(function(result) {
+          $rootScope.$broadcast('courses:updated')
+          $scope.closeNewClassModal();
+        }, function(err) {
+          console.error(err);
+        });
+    }
   };
 
   $scope.resizeScroll = function() {
