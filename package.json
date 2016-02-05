@@ -1,6 +1,6 @@
 {
   "name": "presenteapp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "presenteapp: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -19,9 +19,25 @@
     "cordova-plugin-console",
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    {
+      "locator": "h'ttps://github.com/katzer/cordova-plugin-local-notifications.git",
+      "id": "de.appplant.cordova.plugin.local-notification"
+    },
+    "cordova-plugin-app-event"
   ],
   "cordovaPlatforms": [
-    "android"
+    "android",
+    "ios",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    },
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
+    }
   ]
 }
