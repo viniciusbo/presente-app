@@ -147,7 +147,7 @@ function courseService($q, $cordovaLocalNotification, CourseModel) {
       }
 
       var now = moment();
-      var oneDay = 60 * 60 * 24 * 1000;
+      var twoHours = 60 * 60 * 2;
       var notifications = [];
       var classMoment;
       var notificationId;
@@ -162,7 +162,7 @@ function courseService($q, $cordovaLocalNotification, CourseModel) {
           id: notificationId,
           title: 'Não perca controle de suas faltas.',
           text: 'Você foi na aula de ' + course.name + '?',
-          at: course.attendance.classes[i].date.getTime() + oneDay
+          at: course.attendance.classes[i].date.getTime() + twoHours
         });
       }
       $cordovaLocalNotification.schedule(notifications);
