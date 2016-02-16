@@ -226,7 +226,7 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
 
       var attendanceIndex;
       course.attendance.classes.every(function(attendance, index) {
-        if (attendance.date == date) {
+        if (attendance.date == date && attendance.didAttend == true) {
           attendance.didAttend = true;
           course.attendance.count += parseInt(course.classes[moment(attendance.date).day()]);
           $cordovaBadge.decrease(1);
