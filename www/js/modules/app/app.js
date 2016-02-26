@@ -48,16 +48,6 @@ angular.module('app', ['ionic', 'ngCordova', 'app.controllers', 'course.controll
       }
     })
 
-    // .state('app.courses_new', {
-    //   url: '/courses/new',
-    //   views: {
-    //     'menuContent': {
-    //       templateUrl: 'js/modules/course/templates/new.html',
-    //       controller: 'CoursesNewCtrl'
-    //     }
-    //   }
-    // })
-
     .state('app.courses_show', {
       url: '/courses/{courseId}',
       views: {

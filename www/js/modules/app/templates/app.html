@@ -35,6 +35,7 @@
             <div ng-repeat="(date, attendanceList) in attendanceListByDate">
               <ion-item class="item-divider">
                 {{date | date : 'dd/MM/yyyy'}}
+                <small>{{moment(date).fromNow()}}</small>
               </ion-item>
 
               <ion-item
@@ -43,11 +44,11 @@
                 <h2>{{attendance.courseName}}</h2>
 
                 <div class="buttons">
-                  <a class="button button-clear button-balanced" ng-click="didAttend(attendance.courseId, date)">
+                  <a class="button button-clear button-balanced" ng-click="openAttendancePopover($event, attendance)">
                     <i class="icon ion-checkmark"></i>
                   </a>
 
-                  <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance.courseId, date)">
+                  <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance)">
                     <i class="icon ion-close"></i>
                   </a>
                 </div>

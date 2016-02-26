@@ -18,13 +18,8 @@ function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $io
 
   displayCourses();
 
-  $scope.$on('attendance:updated', function() {
-    displayCourses();
-  });
-
-  $scope.$on('courses:updated', function() {
-    displayCourses();
-  });
+  $scope.$on('attendance:updated', displayCourses);
+  $scope.$on('courses:updated', displayCourses);
 
   $scope.getCourseClassesCountUntilNow = function(course) {
     return courseService.getCourseClassesCountUntilNow(course);

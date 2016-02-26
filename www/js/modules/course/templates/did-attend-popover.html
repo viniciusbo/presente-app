@@ -1,0 +1,15 @@
+<ion-popover-view style="height: 210px">
+  <ion-content>
+    <ion-item class="text-center">
+      Ganhei {{attendance.count}} presenças
+    </ion-item>
+
+    <ion-item class="range">
+      <input type="range" ng-model="attendance.count" min="1" max="{{maxAttendanceCount}}" defaultValue="{{attendance.count}}" />
+    </ion-item>
+
+    <ion-item>
+      <button class="button button-block" ng-click="didAttend(attendance)">Marcar presença</button>
+    </ion-item>
+  </ion-content>
+</ion-popover-view>

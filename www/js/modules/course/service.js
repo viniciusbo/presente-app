@@ -67,9 +67,14 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
             attendanceListByDate = attendanceListByDate || {};
             attendanceListByDate[attendance.date] = attendanceListByDate[attendance.date] || [];
 
+            var attendanceMoment = moment(attendance.date);
+            var attendanceCount = parseInt(course.doc.classes[attendanceMoment.day()]);
+
             attendanceListByDate[attendance.date].push({
               courseId: course.doc._id,
-              courseName: course.doc.name
+              courseName: course.doc.name,
+              date: attendance.date,
+              count: attendanceCount
             });
           });
         });
@@ -215,7 +220,7 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
     return deferred.promise;
   };
 
-  this.didAttend = function(courseId, date) {
+  this.didAttend = function(courseId, date, attendanceCount) {
     var deferred = $q.defer();
 
     db.get(courseId, function(err, course) {
@@ -226,9 +231,9 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
 
       var attendanceIndex;
       course.attendance.classes.every(function(attendance, index) {
-        if (attendance.date == date) {
+        if (attendance.date == date && !attendance.didAttend) {
           attendance.didAttend = true;
-          course.attendance.count += parseInt(course.classes[moment(attendance.date).day()]);
+          course.attendance.count += attendanceCount;
           $cordovaBadge.decrease(1);
 
           var notificationId = course.createdAt + index;
