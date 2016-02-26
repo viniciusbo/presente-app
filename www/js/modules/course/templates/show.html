@@ -6,7 +6,7 @@
       </ion-item>
 
       <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index">
-        {{attendance.date | date : 'dd/MM/yyyy - EEE'}}
+        {{moment(attendance.date).format('D/MM/YYYY - ddd')}}
 
         <i
           class="icon ion-close assertive"

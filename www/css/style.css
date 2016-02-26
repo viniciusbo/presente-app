@@ -64,6 +64,8 @@
   height: auto;
 }
 
-.item-attendance.ng-enter {
-
+.item-divider small {
+  font-size: 70%;
+  font-weight: normal;
+  color: #aaa;
 }
