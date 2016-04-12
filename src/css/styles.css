@@ -106,12 +106,11 @@ a:hover {
   height: 45px;
 }
 
-.splash-screenshot {
-  text-align: center;
+.splash-screenshot .pure-img {
+  margin: 0 auto;
 }
 
 .content-wrapper {
-  /* "scroll-over" effect */
   position: absolute;
   top: 87%;
   width: 100%;

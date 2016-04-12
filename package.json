@@ -18,7 +18,5 @@
   "license": "ISC",
   "homepage": "https://github.com/viniciusbo/presente-website",
   "devDependencies": {
-    "clean-css": "latest",
-    "pug-cli": "latest"
   }
 }

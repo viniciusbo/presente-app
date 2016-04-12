@@ -9,7 +9,7 @@ html(lang="en")
 
     title Não perca controle de suas faltas. De novo. | Presente! App
     
-    link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic")
     link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/base-min.css")
     link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css")
     link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css")
@@ -27,7 +27,7 @@ html(lang="en")
             a(href="https://play.google.com/store/apps/details?id=com.comentto.presente&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1")
               img(alt="Disponível no Google Play", src="https://play.google.com/intl/en_us/badges/images/generic/pt-br-play-badge.png")
         .splash-screenshot
-          img(alt="Tela listando as matérias no aplicativo", src="img/screenshot.png")
+          img(alt="Tela listando as matérias no aplicativo", src="img/screenshot.png", class="pure-img")
 
     div.content-wrapper
       section.content
@@ -49,7 +49,7 @@ html(lang="en")
 
       section.content.ribbon.pure-g.l-box-lrg.is-center
         .pure-u-1-1
-          h2.content-head.content-head-ribbon Carta aberta aos estudantes
+          h2.content-head.content-head-ribbon Carta aberta aos turistas
           p Fim de semestre é complicado, não é difícil perder o controle das suas presenças em aulas. "Será que já estourei o limite de faltas?", "Será que dá pra faltar mais uma?" são situações que vejo acontecer frequentemente nessas épocas.
           p Pensando nisso, o Presente! ajuda a manter controle de presenças (faltas, na verdade) em suas matérias, sem precisar conferir no diário do professor (alguns podem ver com maus olhos).
           p Propagandas são irritantes e atrapalham a experiência geral da pessoa que está usando o aplicativo. Não foi isso que me motivou a desenvolvê-lo. Também tenho consciência que os estudantes muitas vezes sobrevivem com recursos contados. Por isso, acho importante não cobrar pelo download, todos devem ter a oportunidade de usá-lo. Guarde estes "R$ 0,99" para tomar aquela Bavária no bar perto da faculdade ou para completar o rateio da pizza do domingo.
@@ -71,3 +71,12 @@ html(lang="en")
         p Desenvolvido por&nbsp;
           a(href="http://vinicius.borriello.com.br") Vinícius Borriello
           | .
+
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-897164-7', 'auto');
+      ga('send', 'pageview');
