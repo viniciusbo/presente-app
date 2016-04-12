@@ -1,0 +1,73 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="description", content="")
+    meta(name="keywords", content="")
+    meta(name="author", content="")
+    meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+
+    title Não perca controle de suas faltas. De novo. | Presente! App
+    
+    link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic")
+    link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/base-min.css")
+    link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css")
+    link(rel="stylesheet", href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css")
+    link(rel="stylesheet", href="css/bundle.css")
+  body
+    header.splash-container
+      .splash
+        h1.splash-head Não perca controle de suas faltas. De Novo.
+        h2.splash-subhead Presente! App
+        ul.splash-badges
+          li
+            a(href="https://itunes.apple.com/us/app/presente!-controle-de-faltas/id1052617080?l=pt&ls=1&mt=8", title="Baixe na App Store")
+              img(alt="Baixe na App Store", src="https://devimages.apple.com.edgekey.net/app-store/marketing/guidelines/images/badge-download-on-the-app-store-br.svg")
+          li
+            a(href="https://play.google.com/store/apps/details?id=com.comentto.presente&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1")
+              img(alt="Disponível no Google Play", src="https://play.google.com/intl/en_us/badges/images/generic/pt-br-play-badge.png")
+        .splash-screenshot
+          img(alt="Tela listando as matérias no aplicativo", src="img/screenshot.png")
+
+    div.content-wrapper
+      section.content
+        h3.content-head.is-center Vai ter aquela festa. Será que posso faltar a próxima aula?
+        .pure-g
+          .l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4.is-center
+            h3.content-subhead Cadastre suas matérias
+            p Matenha o controle das faltas em cada matéria que está cursando e saiba quantas vezes você ainda pode faltar.
+          .l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4.is-center
+            h3.content-subhead Interface simples e intuitiva
+            p É tão fácil que até sua tia-avó poderia usá-lo para contabilizar as faltas no grupo de crochê.
+          .l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4.is-center
+            h3.content-subhead Notificações
+            p Receba notificações nos dias das aulas para você não esquecer de anotar suas faltas.
+          .l-box.pure-u-1.pure-u-md-1-2.pure-u-lg-1-4.is-center
+            h3.content-subhead Código aberto & 100% grátis
+            p Desenvolvido por um estudante cansado de "tomar pau por falta".&nbsp;
+              a(href="https://github.com/viniciusbo/presente-app", title="Código fonte disponível no GitHub") O código-fonte está disponível no GitHub.
+
+      section.content.ribbon.pure-g.l-box-lrg.is-center
+        .pure-u-1-1
+          h2.content-head.content-head-ribbon Carta aberta aos estudantes
+          p Fim de semestre é complicado, não é difícil perder o controle das suas presenças em aulas. "Será que já estourei o limite de faltas?", "Será que dá pra faltar mais uma?" são situações que vejo acontecer frequentemente nessas épocas.
+          p Pensando nisso, o Presente! ajuda a manter controle de presenças (faltas, na verdade) em suas matérias, sem precisar conferir no diário do professor (alguns podem ver com maus olhos).
+          p Propagandas são irritantes e atrapalham a experiência geral da pessoa que está usando o aplicativo. Não foi isso que me motivou a desenvolvê-lo. Também tenho consciência que os estudantes muitas vezes sobrevivem com recursos contados. Por isso, acho importante não cobrar pelo download, todos devem ter a oportunidade de usá-lo. Guarde estes "R$ 0,99" para tomar aquela Bavária no bar perto da faculdade ou para completar o rateio da pizza do domingo.
+          p
+            em Vinícius Borriello &dash; Outubro 2015
+
+      section.content
+        .l-box.pure-u-1.is-center
+          h3.content-head Quer ajudar?
+          p Me pague um cafézinho (ou uma Bavária :).
+          form(action='https://www.paypal.com/cgi-bin/webscr', method='post', target='_top')
+            input(type='hidden', name='cmd', value='_s-xclick')
+            input(type='hidden', name='encrypted', value='-----BEGIN PKCS7-----MIIHNwYJKoZIhvcNAQcEoIIHKDCCByQCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYBM6o5x6+LXtNaRiGEVdVDpIKhjs+9lUi8qXzzxRrr73afDNWwUN9IZUCX/ujTUP3zBB1uO9Y7tOOmC3JCK0KrFAG+CnvF/PxxATEk+FbsKEXQlZjbAaYOgUGs/mhc9hEfHOal5ZSXLsVpSVKNeci58Nu0FriePZhZBevlFnjbf5jELMAkGBSsOAwIaBQAwgbQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIN+nbCkt5cvuAgZDynzjgenl27rF72N9G89wIcaHVhVVErANd6terw/8Br1dRxQ7Bs4kmyQEVTS+mRQ6O8G3xuuCqZTAN+IiauxLoDs60dw6d48fT9p0RXrON+P+MM42KnDXiE7JXzBDi4RWNmKgvJVNs9KQjDyl1np0Isbe7MBUWkdqLDB7BnIYjPD1H/tD25H+XKQfiBZ7Cj+KgggOHMIIDgzCCAuygAwIBAgIBADANBgkqhkiG9w0BAQUFADCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wHhcNMDQwMjEzMTAxMzE1WhcNMzUwMjEzMTAxMzE1WjCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMFHTt38RMxLXJyO2SmS+Ndl72T7oKJ4u4uw+6awntALWh03PewmIJuzbALScsTS4sZoS1fKciBGoh11gIfHzylvkdNe/hJl66/RGqrj5rFb08sAABNTzDTiqqNpJeBsYs/c2aiGozptX2RlnBktH+SUNpAajW724Nv2Wvhif6sFAgMBAAGjge4wgeswHQYDVR0OBBYEFJaffLvGbxe9WT9S1wob7BDWZJRrMIG7BgNVHSMEgbMwgbCAFJaffLvGbxe9WT9S1wob7BDWZJRroYGUpIGRMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbYIBADAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4GBAIFfOlaagFrl71+jq6OKidbWFSE+Q4FqROvdgIONth+8kSK//Y/4ihuE4Ymvzn5ceE3S/iBSQQMjyvb+s2TWbQYDwcp129OPIbD9epdr4tJOUNiSojw7BHwYRiPh58S1xGlFgHFXwrEBb3dgNbMUa+u4qectsMAXpVHnD9wIyfmHMYIBmjCCAZYCAQEwgZQwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNjA0MTIxNzExMjBaMCMGCSqGSIb3DQEJBDEWBBQb72EM9YBaD/lhm2sY1HpyOq7GLTANBgkqhkiG9w0BAQEFAASBgLH7JPSXIC/vt6yIyDfU1J/0bnyrO3KRwLuiWj43ccUPD0ynZkkgYD0Z96iC98p1ycJCR7WyKQPuTR/FrMBejx1hd5Hhz6Vb3xP/qYkk9ATOkGAcoENy4yz1j7jnvekruPao8VGKpKrPXol4qTsiCbvbUWtFWPdi/HaZbfe3VPoC-----END PKCS7-----\
+            ')
+            input(type='image', src='https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif', border='0', name='submit', alt='PayPal - A maneira fácil e segura de enviar pagamentos online!')
+            img(alt='', border='0', src='https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif', width='1', height='1')
+
+      footer.footer.l-box.is-center
+        p Desenvolvido por&nbsp;
+          a(href="http://vinicius.borriello.com.br") Vinícius Borriello
+          | .

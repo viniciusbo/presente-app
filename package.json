@@ -1,0 +1,24 @@
+{
+  "name": "presente-app",
+  "version": "1.0.0",
+  "description": "Presente! App web site",
+  "scripts": {
+    "build:jade": "jade src -o dist",
+    "build:css": "cleancss src/css/styles.css -o dist/css/bundle.css --skip-rebase",
+    "compile:img": "imagemin src/img/* dist/img --progressive",
+    "build": "npm run build:jade && npm run build:css",
+    "develop": "watch 'npm run build:jade' src & watch 'npm run build:css' src/css & watch 'npm run compile:img' src/img & live-server --watch=dist --open=dist",
+    "git-gh-deploy": "git subtree push --prefix dist origin gh-pages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/viniciusbo/presente-website.git"
+  },
+  "author": "Vinícius Borriello",
+  "license": "ISC",
+  "homepage": "https://github.com/viniciusbo/presente-website",
+  "devDependencies": {
+    "clean-css": "latest",
+    "pug-cli": "latest"
+  }
+}
