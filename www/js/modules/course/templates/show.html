@@ -1,5 +1,9 @@
-<ion-view title="{{course.name}}">
-  <ion-content class="has-header">
+<ion-view>
+  <ion-nav-title>{{course.name}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button ng-click="openCourseActionSheet(course)" class="button button-icon button-clear ion-ios-gear-outline"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header padding-bottom">
     <ion-list class="list list-icon-right">
       <ion-item class="item-divider">
         Presença nas aulas
@@ -7,16 +11,6 @@
 
       <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index">
         {{moment(attendance.date).format('D/MM/YYYY - ddd')}}
-
-        <span class="buttons" ng-show="moment(attendance.date).isSameOrBefore(moment()) && attendance.didAttend == null">
-          <a class="button button-clear button-balanced" ng-click="openAttendancePopover($event, attendance)">
-            <i class="icon ion-checkmark"></i>
-          </a>
-
-          <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance)">
-            <i class="icon ion-close"></i>
-          </a>
-        </span>
 
         <span ng-show="attendance.didAttend != null">
           <i

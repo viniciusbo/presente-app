@@ -6,45 +6,47 @@ angular.module('course.controllers', ['course.service'])
   .controller('CoursesShowCtrl', CoursesShowCtrl);
 
 function CoursesMainCtrl($rootScope, $scope, $state, $ionicSideMenuDelegate, $ionicPopup, courseService) {
-  var displayCourses = function() {
-    courseService
-      .getAll()
-      .then(function(courses) {
-        $scope.courses = courses;
-      }, function(err) {
-        console.error(err);
-      });
-  };
+  displayCourses(courseService, $scope);
 
-  displayCourses();
-
-  $scope.$on('attendance:updated', displayCourses);
-  $scope.$on('courses:updated', displayCourses);
+  $scope.$on('attendance:updated', displayCourses.bind(this, courseService, $scope));
+  $scope.$on('courses:updated', displayCourses.bind(this, courseService, $scope));
 
   $scope.getCourseClassesCountUntilNow = function(course) {
     return courseService.getCourseClassesCountUntilNow(course);
   };
 
-  $scope.remove = function(course) {
-    $ionicPopup
-      .confirm({
-        title: 'Remover matéria',
-        template: 'Tem certeza que deseja remover esta matéria e todo seu histórico de presença?'
-      })
-      .then(function(res) {
-        if (res == true) {
-          courseService
-            .remove(course)
-            .then(function(result) {
-              $rootScope.$broadcast('courses:updated');
-              displayCourses();
-            }, function(err) {
-              console.error(err);
-            });
-        }
-      });
-  };
+  $scope.remove = showRemoveDialog.bind(this, $ionicPopup, courseService, $rootScope);
 }
+
+function displayCourses(courseService, $scope) {
+  courseService
+    .getAll()
+    .then(function(courses) {
+      $scope.courses = courses;
+    }, function(err) {
+      console.error(err);
+    });
+}
+
+function showRemoveDialog($ionicPopup, courseService, $rootScope, course) {
+  $ionicPopup
+    .confirm({
+      title: 'Remover matéria',
+      template: 'Tem certeza que deseja remover esta matéria e todo seu histórico de presença?'
+    })
+    .then(function(res) {
+      if (res == true) {
+        courseService
+          .remove(course)
+          .then(function(result) {
+            $rootScope.$broadcast('courses:updated');
+            displayCourses(courseService, $rootScope);
+          }, function(err) {
+            console.error(err);
+          });
+      }
+    });
+};
 
 function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordovaLocalNotification, $cordovaKeyboard, courseService) {
   $scope.course = {
@@ -103,7 +105,7 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordo
   };
 }
 
-function CoursesShowCtrl($scope, $stateParams, courseService) {
+function CoursesShowCtrl($rootScope, $scope, $stateParams, courseService, $ionicPopup, $ionicActionSheet, $state) {
   courseService
     .get($stateParams.courseId)
     .then(function(result) {
@@ -111,4 +113,22 @@ function CoursesShowCtrl($scope, $stateParams, courseService) {
     }, function(err) {
       console.error(err);
     })
+
+  $scope.remove = showRemoveDialog.bind(null, $ionicPopup, courseService, $rootScope);
+
+  $scope.openCourseActionSheet = function(course) {
+    var hideSheet = $ionicActionSheet.show({
+      destructiveText: 'Remover matéria',
+      destructiveButtonClicked: function() {
+        courseService
+          .remove(course._id)
+          .then(function(result) {
+            $rootScope.$broadcast('courses:updated');
+            $state.go('app.courses_main');
+          }, function(err) {
+            console.error(err);
+          });
+      }
+    });
+  };
 }
