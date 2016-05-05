@@ -24,7 +24,7 @@
             energized: course.doc.attendance.count / (course.doc.attendance.count + course.doc.attendance.skipCount) < 0.75 && course.doc.attendance.count / (course.doc.attendance.count + course.doc.attendance.skipCount) >= 0.25,
             assertive: course.doc.attendance.count / (course.doc.attendance.count + course.doc.attendance.skipCount) < 0.25
           }"></i> {{course.doc.name}}
-        <p>{{course.doc.attendance.count}} presenças em {{course.doc.attendance.count + course.doc.attendance.skipCount}} aulas</p>
+        <p>{{course.doc.attendance.skipCount}} faltas em {{course.doc.attendance.count + course.doc.attendance.skipCount}} aulas</p>
 
         <ion-option-button class="button-assertive" ng-click="remove(course.doc._id)">
           <i class="icon ion-trash-a"></i>
