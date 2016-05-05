@@ -54,7 +54,8 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordo
   $scope.defaultStartPlaceholder = moment().format('DD/MM/YYYY');
 
   $scope.hideKeyboard = function() {
-    $cordovaKeyboard.close();
+    if ($cordovaKeyboard)
+      $cordovaKeyboard.close();
   };
 
   $scope.hasAtLeastOneClass = function(weekdays, courseClasses) {
@@ -74,14 +75,16 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordo
   };
 
   $scope.save = function(course, weekdays) {
-    window.plugin.notification.local.hasPermission(function(granted) {
-      if (granted == false)
-        window.plugin.notification.local.registerPermission(function(granted) {
+    if (window.plugin.notification) {
+      window.plugin.notification.local.hasPermission(function(granted) {
+        if (granted == false)
+          window.plugin.notification.local.registerPermission(function(granted) {
+            insertCourse();
+          });
+        else
           insertCourse();
-        });
-      else
-        insertCourse();
-    });
+      });
+    }
 
     function insertCourse() {
       courseService
