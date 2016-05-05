@@ -8,18 +8,30 @@
       <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index">
         {{moment(attendance.date).format('D/MM/YYYY - ddd')}}
 
-        <i
-          class="icon ion-close assertive"
-          ng-show="attendance.didAttend == false"
-          ></i>
-        <i
-          class="icon ion-checkmark balanced"
-          ng-show="attendance.didAttend == true"
-          ></i>
-        <i
-          class="icon ion-help"
-          ng-show="attendance.didAttend == null"
-          ></i>
+        <span class="buttons" ng-show="moment(attendance.date).isSameOrBefore(moment()) && attendance.didAttend == null">
+          <a class="button button-clear button-balanced" ng-click="openAttendancePopover($event, attendance)">
+            <i class="icon ion-checkmark"></i>
+          </a>
+
+          <a class="button button-clear button-assertive" ng-click="didNotAttend(attendance)">
+            <i class="icon ion-close"></i>
+          </a>
+        </span>
+
+        <span ng-show="attendance.didAttend != null">
+          <i
+            class="icon ion-close assertive"
+            ng-show="attendance.didAttend === false"
+            ></i>
+          <i
+            class="icon ion-checkmark balanced"
+            ng-show="attendance.didAttend === true"
+            ></i>
+          <i
+            class="icon ion-help"
+            ng-show="attendance.didAttend === null"
+            ></i>
+        </span>
       </ion-item>
     </ion-list>
   </ion-content>
