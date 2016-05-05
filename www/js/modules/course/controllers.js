@@ -106,13 +106,17 @@ function CoursesNewCtrl($rootScope, $scope, $state, $ionicScrollDelegate, $cordo
 }
 
 function CoursesShowCtrl($rootScope, $scope, $stateParams, courseService, $ionicPopup, $ionicActionSheet, $state) {
-  courseService
-    .get($stateParams.courseId)
-    .then(function(result) {
-      $scope.course = result;
-    }, function(err) {
-      console.error(err);
-    })
+  var updateCourse = function() {
+    courseService
+      .get($stateParams.courseId)
+      .then(function(result) {
+        $scope.course = result;
+      }, function(err) {
+        console.error(err);
+      });
+  }
+
+  updateCourse();
 
   $scope.remove = showRemoveDialog.bind(null, $ionicPopup, courseService, $rootScope);
 
@@ -125,6 +129,26 @@ function CoursesShowCtrl($rootScope, $scope, $stateParams, courseService, $ionic
           .then(function(result) {
             $rootScope.$broadcast('courses:updated');
             $state.go('app.courses_main');
+          }, function(err) {
+            console.error(err);
+          });
+      }
+    });
+  };
+
+  $scope.showAttendanceClearConfirmation = function(course, attendanceDate) {
+    $ionicPopup
+    .confirm({
+      title: 'Limpar presença',
+      template: 'Ao confirmar, essa presença estará disponível novamente na lista de pendentes no menu lateral'
+    })
+    .then(function(res) {
+      if (res === true) {
+        courseService
+          .clearAttendanceAtDate(course._id, attendanceDate)
+          .then(function(result) {
+            $rootScope.$broadcast('courses:updated');
+            updateCourse();
           }, function(err) {
             console.error(err);
           });

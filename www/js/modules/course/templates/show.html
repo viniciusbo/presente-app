@@ -9,7 +9,9 @@
         Presença nas aulas
       </ion-item>
 
-      <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index">
+      <ion-item ng-repeat="(index, attendance) in course.attendance.classes track by index" class="item-button-left">
+        <button ng-click="showAttendanceClearConfirmation(course, attendance.date)" class="button button-icon button-clear ion-ios-close-outline"></button>
+
         {{moment(attendance.date).format('D/MM/YYYY - ddd')}}
 
         <span ng-show="attendance.didAttend != null">

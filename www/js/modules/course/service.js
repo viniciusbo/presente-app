@@ -323,4 +323,47 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
 
     return deferred.promise;
   };
+
+  this.clearAttendanceAtDate = function(courseId, date) {
+    var deferred = $q.defer();
+
+    db.get(courseId, function(err, course) {
+      if (err) {
+        deferred.reject(err);
+        return;
+      }
+
+      var attendanceIndex;
+      course.attendance.classes.every(function(attendance, index) {
+        console.log(attendance.date, date);
+        if (attendance.date == date) {
+          if (attendance.didAttend === true) {
+            course.attendance.count -= parseInt(course.classes[moment(attendance.date).day()]);
+          } else if (attendance.didAttend === false) {
+            course.attendance.skipCount -= parseInt(course.classes[moment(attendance.date).day()]);
+          }
+
+          attendance.didAttend = null;
+
+          var notificationId = course.createdAt + index;
+          $cordovaLocalNotification.cancel(notificationId);
+
+          return false;
+        }
+
+        return true;
+      });
+
+      db.put(course, courseId, function(err, updatedCourse) {
+        if (err) {
+          deferred.reject(err);
+          return;
+        }
+
+        return deferred.resolve(updatedCourse);
+      })
+    });
+
+    return deferred.promise;
+  };
 }
