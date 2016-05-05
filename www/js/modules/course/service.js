@@ -119,6 +119,23 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
     var self = this;
     var deferred = $q.defer();
 
+    course = bootstrapNewCourse(course, weekdays);
+    db.post(course, function(err, doc) {
+      if (err) {
+        defered.reject(err);
+        return;
+      }
+
+      updateBadgeCounter.call(self);
+      scheduleCourseNotifications.call(self, course);
+
+      deferred.resolve(doc);
+    });
+
+    return deferred.promise;
+  };
+
+  function bootstrapNewCourse(course, weekdays) {
     var startDate = moment(course.start);
     var endDate = moment(course.end);
     var currentDate = startDate.clone();
@@ -146,45 +163,40 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
       }
     }
 
-    db.post(course, function(err, doc) {
-      if (err) {
-        defered.reject(err);
-        return;
-      }
+    return course;
+  }
 
-      self
-        .getPendingAttendanceCount()
-        .then(function(count) {
-          $cordovaBadge.set(count);
-        });
+  function updateBadgeCounter() {
+    this
+      .getPendingAttendanceCount()
+      .then(function(count) {
+        $cordovaBadge.set(count);
+      });
+  }
 
-      var now = moment();
-      var notifications = [];
-      var classMoment;
-      var notificationId;
+  function scheduleCourseNotifications(course) {
+    var now = moment();
+    var notifications = [];
+    var classMoment;
+    var notificationId;
 
-      for (var i = 0; i < course.attendance.classes.length; i++) {
-        classMoment = moment(course.attendance.classes[i].date);
-        if (classMoment.isBefore(now) && !classMoment.isSame(now, 'day'))
-          continue;
+    for (var i = 0; i < course.attendance.classes.length; i++) {
+      classMoment = moment(course.attendance.classes[i].date);
+      if (classMoment.isBefore(now) && !classMoment.isSame(now, 'day'))
+        continue;
 
-        classMoment.hour(20);
-        notificationId = course.createdAt + i;
-        notifications.push({
-          id: notificationId,
-          title: 'Não perca controle de suas faltas.',
-          text: 'Você foi nas aula de hoje?',
-          at: classMoment.toDate()
-        });
-      }
+      classMoment.hour(20);
+      notificationId = course.createdAt + i;
+      notifications.push({
+        id: notificationId,
+        title: 'Não perca controle de suas faltas',
+        text: 'Você foi na aula de ' + course.name + ' hoje?',
+        at: classMoment.toDate()
+      });
+    }
 
-      $cordovaLocalNotification.schedule(notifications);
-
-      deferred.resolve(doc);
-    });
-
-    return deferred.promise;
-  };
+    $cordovaLocalNotification.schedule(notifications);
+  }
 
   this.remove = function(courseId) {
     var self = this;
@@ -231,11 +243,23 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
 
       var attendanceIndex;
       course.attendance.classes.every(function(attendance, index) {
-        if (attendance.date == date && !attendance.didAttend) {
-          attendance.didAttend = true;
-          course.attendance.count += attendanceCount;
-          $cordovaBadge.decrease(1);
+        if (attendance.date == date) {
+          if (attendance.didAttend === null) {
+            $cordovaBadge.decrease(1);
+          }
 
+          var classCount = parseInt(course.classes[moment(attendance.date).day()]);
+          if (attendance.didAttend === false) {
+            course.attendance.skipCount -= classCount;
+          }
+
+          var skipCount = classCount - parseInt(attendanceCount);
+          if (skipCount > 0) {
+            course.attendance.skipCount += skipCount;
+          }
+
+          course.attendance.count += parseInt(attendanceCount);
+          attendance.didAttend = true;
           var notificationId = course.createdAt + index;
           $cordovaLocalNotification.cancel(notificationId);
 
@@ -270,10 +294,14 @@ function courseService($q, $cordovaLocalNotification, $cordovaBadge, CourseModel
       var attendanceIndex;
       course.attendance.classes.every(function(attendance, index) {
         if (attendance.date == date) {
-          attendance.didAttend = false;
-          course.attendance.skipCount += parseInt(course.classes[moment(attendance.date).day()]);
-          $cordovaBadge.decrease(1);
+          if (attendance.didAttend === true) {
+            course.attendance.count -= parseInt(course.classes[moment(attendance.date).day()]);
+          } else {
+            $cordovaBadge.decrease(1);
+          }
 
+          course.attendance.skipCount += parseInt(course.classes[moment(attendance.date).day()]);
+          attendance.didAttend = false;
           var notificationId = course.createdAt + index;
           $cordovaLocalNotification.cancel(notificationId);
 
